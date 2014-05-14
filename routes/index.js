@@ -4,12 +4,22 @@ var router = express.Router();
 
 
 router.get('/', function (req, res) {
-
     db.query("select * from perf.`perf-keys` order by `dept`,`group`;", null, function (err, data) {
         res.render('index', { title: 'index', data: data });
     })
 
 });
+
+router.get('/p/chart', function (req, res) {
+    var k = req.query.k;
+    db.query("select * from perf.`perf-tp-5m` order by `date` desc limit 10;", null, function (err, data) {
+        res.render('p/chart', {d: data});
+    })
+
+})
+router.get('/p/d', function (req, res) {
+    res.render('p/d');
+})
 router.post('/p/keys', function (req, res) {
 
     db.query("select * from perf.`perf-keys` order by `dept`,`group`;", null, function (err, data) {
@@ -35,9 +45,16 @@ router.post('/p/keys', function (req, res) {
                 var q = m[o];
                 w["text"] = o;
                 w["children"] = new Array();
+
+                //last node
                 for (var e in q) {
                     var r = {};
+                    var k = n + ":" + o + ":" + q[e];
                     r["text"] = q[e];
+                    r["attributes"] = {
+                        "url": "/p/chart?k=" + k,
+                        desp: k
+                    }
                     w["children"].push(r);
                 }
                 t["children"].push(w);

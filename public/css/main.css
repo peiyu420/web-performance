@@ -55,9 +55,8 @@ textarea.html,textarea.js{
 #content{
     text-align:left;
     width:960px;
-    margin:0 auto;
+
     padding:10px;
-    padding:0;
     border-radius:5px;
     border:0;
     background:#fff;

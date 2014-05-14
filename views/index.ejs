@@ -8,53 +8,55 @@
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
     <script type="text/javascript" src="/js/easyui/jquery.min.js"></script>
     <script type="text/javascript" src="/js/easyui/jquery.easyui.min.js"></script>
-    <script type="text/javascript">
+    <script type="text/javascript" src="/js/amcharts.js"></script>
+    <script type="text/javascript" src="/js/serial.js"></script>
+    <script type="text/javascript" src="http://www.amcharts.com/lib/3/themes/none.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://www.jeasyui.com/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="http://www.jeasyui.com/easyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="http://www.jeasyui.com/easyui/demo/demo.css">
 
-        function open1(plugin) {
-            if ($('#tt').tabs('exists', plugin)) {
-                $('#tt').tabs('select', plugin);
-            } else {
-                $('#tt').tabs('add', {
-                    title: plugin,
-                    href: plugin + '.php',
-                    closable: true,
-                    extractor: function (data) {
-                        data = $.fn.panel.defaults.extractor(data);
-                        var tmp = $('<div></div>').html(data);
-                        data = tmp.find('#content').html();
-                        tmp.remove();
-                        return data;
-                    }
-                });
-            }
-        }
-    </script>
+
 </head>
 <body class="easyui-layout" style="text-align:left">
 <div region="north" border="false" style="background:#ccc;text-align:center">
     <div id="header-inner"></div>
 </div>
 <div region="west" split="true" title="业务线" style="width:250px;padding:5px;">
-    <ul class="easyui-tree">
-        <li data-options="state:'closed'" iconCls="icon-base"><span>Base</span>
-
-        </li>
-
-    </ul>
+    <ul class="easyui-tree"></ul>
 </div>
 <div region="center">
     <div id="tt" class="easyui-tabs" fit="true" border="false" plain="true">
-        <div title="welcome" href="welcome.php"></div>
+        <div title="welcome" href="/p/d"></div>
     </div>
 </div>
 <script type="text/javascript">
     var tEl = $(".easyui-tree");
-    tEl.html("");
     tEl.tree({
-        url:'/p/keys'
+        url: '/p/keys', onClick: function (node) {
+            openTab(node);
+        }
     });
 
-
+    function openTab(node) {
+        var url = node.attributes.url;
+        var plugin = node.attributes.desp;
+        if ($('#tt').tabs('exists', plugin)) {
+            $('#tt').tabs('select', plugin);
+        } else {
+            $('#tt').tabs('add', {
+                title: plugin,
+                href: url,
+                closable: true,
+                extractor: function (data) {
+                    data = $.fn.panel.defaults.extractor(data);
+                    var tmp = $('<div></div>').html(data);
+                    data = tmp.find('#content').html();
+                    tmp.remove();
+                    return data;
+                }
+            });
+        }
+    }
 </script>
 
 </body>
