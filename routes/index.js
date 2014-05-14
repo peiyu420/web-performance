@@ -1,5 +1,6 @@
 var express = require('express');
 var db = require('../db.js');
+var comb = require('comb');
 var router = express.Router();
 
 
@@ -12,10 +13,31 @@ router.get('/', function (req, res) {
 
 router.get('/p/chart', function (req, res) {
     var k = req.query.k;
-    db.query("select * from perf.`perf-tp-5m` order by `date` desc limit 10;", null, function (err, data) {
-        res.render('p/chart', {d: data});
-    })
 
+    res.render('p/chart', {k: k,ck: k.replace(":","_").replace(":","_") });
+})
+router.get('/p/chart/data', function (req, res) {
+    var k = req.query.k;
+
+    db.query("select * from perf.`perf-tp-5m` where `key`=? order by `date` desc limit 10;", k, function (err, data) {
+
+        var tp999 = new Array();
+        var tp99 = new Array();
+        var tp90 = new Array();
+        var tp50 = new Array();
+        var call = new Array();
+        var date = new Array();
+        for (var n in data) {
+            var m = data[n];
+            date.push(comb.date.format(m.date, "yyyy-MM-dd H:m:s"));
+            tp999.push(m.tp999);
+            tp99.push(m.tp99);
+            tp90.push(m.tp90);
+            tp50.push(m.tp50);
+            call.push(m.call);
+        }
+        res.send({h: {tp999: tp999.reverse(), tp99: tp99.reverse(), tp90: tp90.reverse(), tp50: tp50.reverse(), call: call.reverse()}, d: date.reverse()});
+    })
 })
 router.get('/p/d', function (req, res) {
     res.render('p/d');
