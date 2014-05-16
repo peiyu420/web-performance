@@ -1,10 +1,37 @@
-<div id="content">
+<div id="content" >
+    <div id="<%=k%>" style="margin: 20px 0 0 20px;">
+        监控频率:
+        <select id="<%=ck%>" class="easyui-combobox" name="frequency" style="width:100px;">
+            <option value="a">5分钟/次</option>
+            <option value="b">1小时/次</option>
+            <option value="c">1天/次</option>
+        </select>
+        &nbsp;&nbsp;
+        起始时间:
+        <input class="easyui-datetimebox" name="start" id="<%=ck%>_start"
+               data-options="required:true,showSeconds:true,formatter:myformatter" value="<%=new Date().getTime()%>" style="width:140px">
+        &nbsp;&nbsp;
+        结束时间:
+        <input class="easyui-datetimebox" name="end" id="<%=ck%>_end"
+               data-options="required:true,showSeconds:true,formatter:myformatter" value="<%=new Date().getTime()%>" style="width:140px">
+        <a href="javascript:void(0)" style="width:60px;" class="easyui-linkbutton"
+           onclick="reloadData('<%=k%>','<%=ck%>',$('#<%=ck%>').combobox('getValue'),$('#<%=ck%>_start').datetimebox('getValue'),$('#<%=ck%>_end').datetimebox('getValue'),1)">查看</a>
+    </div>
 
 <div id="<%=ck%>_c" style="padding: 10px;">
 
 </div>
 
 <script type="text/javascript">
-init({k:'<%=k%>',cid:'<%=ck%>_c',c1:'<%=ck%>_c1',c2:'<%=ck%>_c2'});
+    reloadData('<%=k%>','<%=ck%>','a',null,null,0);
+    function myformatter(date){
+        var y = date.getFullYear();
+        var m = date.getMonth()+1;
+        var d = date.getDate();
+        var h=date.getHours();
+        var f=date.getUTCMinutes();
+        var s=date.getUTCSeconds();
+        return y+'-'+(m<10?('0'+m):m)+'-'+(d<10?('0'+d):d)+' '+(h<10?('0'+h):h)+':'+(f<10?('0'+f):f)+":"+(s<10?('0'+s):s);
+    }
 </script>
 </div>
